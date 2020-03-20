@@ -1,6 +1,9 @@
-import { FormBuilder, Validators, FormGroup } from "@angular/forms";
 import { Component, OnInit } from "@angular/core";
-import { PostService } from "./../../util/posts/post.service";
+import { FormBuilder } from "@angular/forms";
+import { AppError } from "../../core/error/app-error";
+import { BadRequest } from "../../core/error/bad-request-error";
+import { NotFoundError } from "../../core/error/not-found-error";
+import { PostService } from "../../services/posts/post.service";
 import { PostComponent } from "./post/post.component";
 
 @Component({
@@ -11,7 +14,7 @@ import { PostComponent } from "./post/post.component";
 export class PostsComponent implements OnInit {
   posts: any;
   form;
-  constructor(private service: PostService, fb?: FormBuilder) {
+  constructor(private postService: PostService, fb?: FormBuilder) {
     this.form = fb.group({
       userid: [0],
       id: [0],
@@ -21,16 +24,12 @@ export class PostsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.service.getPosts().subscribe(
-      data => {
-        this.posts = data;
-      },
-      (error: Response) => {
-        if (error.status === 404) {
+    this.postService.getAll().subscribe(
+      data => (this.posts = data),
+      (error: AppError) => {
+        if (error instanceof NotFoundError) {
           alert("The post was not found.");
-        } else {
-          alert("An unexpected error occurred.");
-        }
+        } else throw error;
       }
     );
   }
@@ -45,49 +44,44 @@ export class PostsComponent implements OnInit {
 
     _post.value.title = "";
     _post.value.body = "";
+    this.posts.splice(0, 0, post);
 
-    this.service.createPost(post).subscribe(
-      data => {
-        this.posts.splice(0, 0, data);
-      },
-      (error: Response) => {
-        if (error.status === 400) {
-          this.form.setErrors(error.json());
+    this.postService.create(post).subscribe(
+      (data: any) => (post["id"] = data.id),
+      (error: AppError) => {
+        this.posts.splice(0, 1);
+        if (error instanceof BadRequest) {
+          this.form.setErrors(error.originalError);
         } else {
-          alert("An unexpected error occurred.");
+          throw error;
         }
       }
     );
   }
 
   update(_post) {
-    this.service.updatePost(_post).subscribe(
-      data => {
-        console.log("data ", data);
-      },
-      (error: Response) => {
-        if (error.status === 404) {
+    this.postService.update(_post).subscribe(
+      data => console.log("data ", data),
+      (error: AppError) => {
+        if (error instanceof NotFoundError) {
           alert("The post was not found.");
         } else {
-          alert("An unexpected error occurred.");
+          throw error;
         }
       }
     );
   }
 
   delete(_post) {
-    this.service.deletePost(_post.id).subscribe(
-      data => {
-        let index = this.posts.indexOf(_post);
-        this.posts.splice(index, 1);
-      },
-      (error: Response) => {
-        if (error.status === 404) {
-          alert("The post has already been deleted.");
-        } else {
-          alert("An unexpected error occurred.");
-        }
+    let index = this.posts.indexOf(_post);
+    this.posts.splice(index, 1);
+    this.postService.delete(345).subscribe(null, (error: AppError) => {
+      this.posts.splice(index, 0, _post);
+      if (error instanceof NotFoundError) {
+        alert("The post has already been deleted.");
+      } else {
+        throw error;
       }
-    );
+    });
   }
 }
