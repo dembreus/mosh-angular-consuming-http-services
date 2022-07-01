@@ -11,21 +11,34 @@ import { PostService } from "./services/posts/post.service";
 import { AppErrorHandler } from "./core/error/app-error-handler";
 import { UsersComponent } from "./components/users/users.component";
 import { UserService } from "./services/users/user.service";
+import { NotFoundComponent } from "./components/not-found/not-found.component";
+import { HomeComponent } from "./components/home/home.component";
+import { NavBarComponent } from "./components/nav-bar/nav-bar.component";
+import { FooterComponent } from "./components/footer/footer.component";
 
 @NgModule({
-  declarations: [AppComponent, PostsComponent, PostComponent, UsersComponent],
+  declarations: [
+    AppComponent,
+    PostsComponent,
+    PostComponent,
+    UsersComponent,
+    NotFoundComponent,
+    HomeComponent,
+    NavBarComponent,
+    FooterComponent,
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ],
   providers: [
     PostService,
     UserService,
-    { provide: ErrorHandler, useClass: AppErrorHandler }
+    { provide: ErrorHandler, useClass: AppErrorHandler },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule {}
