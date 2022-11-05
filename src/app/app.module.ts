@@ -15,6 +15,8 @@ import { NotFoundComponent } from "./components/not-found/not-found.component";
 import { HomeComponent } from "./components/home/home.component";
 import { NavBarComponent } from "./components/nav-bar/nav-bar.component";
 import { FooterComponent } from "./components/footer/footer.component";
+import { GithubProfileComponent } from './components/github-profile/github-profile.component';
+import { GithubFollowersComponent } from './components/github-followers/github-followers.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +28,8 @@ import { FooterComponent } from "./components/footer/footer.component";
     HomeComponent,
     NavBarComponent,
     FooterComponent,
+    GithubProfileComponent,
+    GithubFollowersComponent,
   ],
   imports: [
     BrowserModule,
