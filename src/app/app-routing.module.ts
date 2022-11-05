@@ -12,7 +12,6 @@ const routes: Routes = [
   { path: "followers", component: GithubFollowersComponent },
   { path: "profile/:username", component: GithubProfileComponent },
   { path: "posts/:id", component: PostComponent },
-  { path: "posts/:id", component: PostComponent },
   { path: "posts", component: PostsComponent },
   { path: "users", component: UsersComponent },
   { path: "", component: HomeComponent },
