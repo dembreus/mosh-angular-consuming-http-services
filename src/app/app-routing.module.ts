@@ -9,6 +9,7 @@ import { PostsComponent } from "./components/posts/posts.component";
 import { UsersComponent } from "./components/users/users.component";
 
 const routes: Routes = [
+  { path: "followers/:id/:username", component: GithubProfileComponent },
   { path: "followers", component: GithubFollowersComponent },
   { path: "profile/:username", component: GithubProfileComponent },
   { path: "posts/:id", component: PostComponent },
